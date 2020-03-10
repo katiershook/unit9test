@@ -127,11 +127,13 @@ router.get('/courses' , asyncHandler(async (req, res) => {
             }
         ]
     });
+res.json(courses);
+
 
 
 router.get('/courses/:id' , asyncHandler(async (req, res) => {
-let course;
-course = await Course.findByPk(req.params.id, {
+// let course;
+const course = await Course.findByPk(req.params.id, {
     attributes:{
 exclude:[
     'createdAt',
@@ -148,16 +150,14 @@ include: [
                 'createdAt',
                 'updatedAt'
             ]
-        }
+        },
 
-    }
-
-]
-}
-);
+    },
+],
+});
 
     
-    res.json(courses);
+  res.status(200).json(course);
 }
 )
 )}
