@@ -160,7 +160,51 @@ include: [
   res.status(200).json(course);
 }
 )
-)}
-))
+)}))
 
+// post course 
+router.post('/courses', userAuth, asyncHandler(async(req,res)=> {
+    try{
+        const course= await Course.create(req.body);
+        res.status(201).location('/courses/' + course.id).end();
+    } catch(error){
+        if(error.name === 'SequelizeValidationError')
+        { const errors = error.errors.map (err=>err.message);
+            res.status(400).json({errors});
+        } else {
+            throw error;
+        }
+    }
+}));
+
+
+// put courses with validation using check
+
+router.put('/courses/:id', userAuth, [
+    check('title')
+        .exists()
+         .withMessage('title is required :)'),
+    check('description')
+        .exists()
+         .withMessage('a course description is required :)'),
+     check('userId')
+        .exists()
+        .withMessage('a userId is required :) ')
+
+] , asyncHandler(async (req,res,next)=> {
+    const errors = validationResults(req);
+    if(!errors.isEmpty()){
+        const errorMessages= errors.array().map(error => error.msg);
+        res.status(400).json({errors: errorMessages});
+    } else {
+        const AuthorizedUser = req.currentUser;
+        const course = await Course.findByPk(req.params.id);
+        if(AuthorizedUser.id === course.userId){
+            await course.update(req.body);
+            res.status(204).end();
+        }else {
+            res.status(403).json({message: " whoops you cant make changes to someone else's courses :( "})
+        }
+    }
+}));
 module.exports= router;
