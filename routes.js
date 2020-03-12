@@ -1,7 +1,7 @@
 'use strict'
 const express = require('express');
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
+const { check, validationResults } = require('express-validator');
  const bcryptjs = require('bcryptjs');
 const auth = require('basic-auth');
 
@@ -162,10 +162,10 @@ include: [
 )
 )}))
 
-// post course 
+// post course for new course
 router.post('/courses', userAuth, asyncHandler(async(req,res)=> {
     try{
-        const course= await Course.create(req.body);
+        const course = await Course.create(req.body);
         res.status(201).location('/courses/' + course.id).end();
     } catch(error){
         if(error.name === 'SequelizeValidationError')
