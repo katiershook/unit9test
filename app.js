@@ -16,7 +16,8 @@ const app = express();
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
 
-
+// json
+app.use(express.json())
 // autheniticate 
 sequelize
   .authenticate()

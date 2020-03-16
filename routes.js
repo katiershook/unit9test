@@ -1,7 +1,7 @@
 'use strict'
 const express = require('express');
 const router = express.Router();
-const { check, validationResults } = require('express-validator');
+const { check, validationResult } = require('express-validator');
  const bcryptjs = require('bcryptjs');
 const auth = require('basic-auth');
 
@@ -85,7 +85,7 @@ router.get('/users', userAuth, asyncHandler(async (req, res) => {
 //post for user
 
 router.post('/users', asyncHandler(async (req,res) => {
-    const errors = validationResults(req);
+    const errors = validationResult(req);
     if(!errors.isEmpty())
     {
         const errorMsg = errors.array().map(error => error.msg);
@@ -178,7 +178,9 @@ router.post('/courses', userAuth, asyncHandler(async(req,res)=> {
 }));
 
 
-// put courses with validation using check
+//updates courses 
+
+
 
 router.put('/courses/:id', userAuth, [
     check('title')
@@ -192,7 +194,7 @@ router.put('/courses/:id', userAuth, [
         .withMessage('a userId is required :) ')
 
 ] , asyncHandler(async (req,res,next)=> {
-    const errors = validationResults(req);
+    const errors = validationResult(req);
     if(!errors.isEmpty()){
         const errorMessages= errors.array().map(error => error.msg);
         res.status(400).json({errors: errorMessages});
@@ -205,6 +207,28 @@ router.put('/courses/:id', userAuth, [
         }else {
             res.status(403).json({message: " whoops you cant make changes to someone else's courses :( "})
         }
+    }
+}));
+
+
+
+/// delete a course 
+router.delete('/courses/:id', userAuth, asyncHandler(async(req,res,next) => {
+    const user = req.currentUser;
+    const course = await Course.findByPk(req.params.id);
+    if(course){
+        if(user.id === course.userId){
+            await course.destroy();
+            res.status(204).end();
+
+        } else {
+            res.status(403).json({
+                message: " hey friend, you can't delete someone elses course."
+            });
+        }
+        }else {
+            next();
+        
     }
 }));
 module.exports= router;
