@@ -83,7 +83,6 @@ router.get('/users', userAuth, asyncHandler(async (req, res) => {
 
 
 //post for user
-
 router.post('/users', asyncHandler(async (req,res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty())
@@ -95,7 +94,7 @@ router.post('/users', asyncHandler(async (req,res) => {
      } else {
          const user = req.body;
          if(user.password){
-             user.password = bcrypt.hashSync(user.password);
+             user.password = bcryptjs.hashSync(user.password);
          }
             await User.create(req.body);
             res.status(201).location('/').end();
@@ -103,7 +102,6 @@ router.post('/users', asyncHandler(async (req,res) => {
          }
 })
 )
-
 router.get('/courses' , asyncHandler(async (req, res) => {
     const courses = await Course.findAll({
         attribute: {
@@ -166,6 +164,9 @@ include: [
 router.post('/courses', userAuth, asyncHandler(async(req,res)=> {
     try{
         const course = await Course.create(req.body);
+        res.status(400).json({
+           message: "your course has been created"
+        });
         res.status(201).location('/courses/' + course.id).end();
     } catch(error){
         if(error.name === 'SequelizeValidationError')

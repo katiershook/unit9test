@@ -14,14 +14,14 @@ module.exports = (sequelize) =>{
             type: Sequelize.STRING,
                allowNull: false,
             validate:{
-                notnull: {
+                notNull: {
                     msg: " a name is required"
                 }}}, 
                 lastName :{
                     type: Sequelize.STRING,
                     allowNull: false,
                  validate:{
-                     notnull: {
+                     notNull: {
                          msg: " a  last name is required"
                      }
                     }
