@@ -5,7 +5,7 @@ module.exports = (sequelize) =>{
     class User extends Sequelize.Model{}
     User.init({
         id:{
-            type: Sequelize.STRING,
+            type: Sequelize.INTEGER,
             allowNull:false,
             primaryKey: true,
             autoIncrement: true,
