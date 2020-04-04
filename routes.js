@@ -82,6 +82,7 @@ router.get('/users', userAuth, asyncHandler(async (req, res) => {
 ) );
 
 
+
 //post for user
 router.post('/users', asyncHandler(async (req,res) => {
     const errors = validationResult(req);
@@ -97,7 +98,9 @@ router.post('/users', asyncHandler(async (req,res) => {
              user.password = bcryptjs.hashSync(user.password);
          }
             await User.create(req.body);
-            res.status(201).location('/').end();
+            res.status(201).json({
+                message: " You're account has been created"
+            }).location('/').end();
 
          }
 })
