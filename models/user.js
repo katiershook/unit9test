@@ -32,7 +32,10 @@ module.exports = (sequelize) =>{
                     validate:{
                         notNull:{
                             msg: " your email is required"
-                        }
+                        },
+                        isEmail:true   },  
+                        unique:{   
+                             args: true,                        msg:"An account for this email already exists!"
                     }
                     },
 
