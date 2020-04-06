@@ -99,12 +99,12 @@ router.post('/users', asyncHandler(async (req,res) => {
          }
             await User.create(req.body);
             res.status(201).json({
-                message: " You're account has been created"
+                message: " Your account has been created"
             }).location('/').end();
 
          }
 })
-)
+);
 router.get('/courses' , asyncHandler(async (req, res) => {
     const courses = await Course.findAll({
         attribute: {
@@ -167,7 +167,7 @@ include: [
 router.post('/courses', userAuth, asyncHandler(async(req,res)=> {
     try{
         const course = await Course.create(req.body);
-        res.status(400).json({
+        res.status(201).json({
            message: "your course has been created"
         });
         res.status(201).location('/courses/' + course.id).end();
